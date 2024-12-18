@@ -8,7 +8,7 @@ Object.defineProperty(window, "tictactoe", {
 }); 
 */
 
-export default function tictactoe() {
+function tictactoe() {
 
   console.clear();
   console.log("Shall we play a game?\n");
@@ -305,3 +305,5 @@ export default function tictactoe() {
     }
   }
 }
+
+export default tictactoe;
