@@ -1,7 +1,9 @@
-# tictactoe
-Tic-tac-toe game written in Typescript. This game is designed to be a composable for Vue.
+# console-tictactoe
+> `npm i console-tictactoe`
 
-After including this into your component/root component:
+Tic-tac-toe game written in Typescript.
+
+After including this into your index.html/index.js or something similar:
 
 ```
 import { tictactoe } from '@/composables/tictactoe.ts'
@@ -12,7 +14,6 @@ Object.defineProperty(window, "tictactoe", {
     }
 });
 ```
-
 
 you can then open the developer console and run
 - `> tictactoe`
