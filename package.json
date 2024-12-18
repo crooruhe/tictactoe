@@ -1,6 +1,6 @@
 {
   "name": "console-tictactoe",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Typescript version of Tic-Tac-Toe that can be played in the developer console on your web app.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
