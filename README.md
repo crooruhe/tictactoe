@@ -8,12 +8,6 @@ After including this into your index.html/index.js or something similar:
 ```
 <script type="module">
 import { tictactoe } from 'console-tictactoe'
-
-Object.defineProperty(window, "tictactoe", {
-    get: () => {
-       tictactoe();
-    }
-});
 </script>
 ```
 
