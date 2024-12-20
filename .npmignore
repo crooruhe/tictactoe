@@ -1,0 +1,11 @@
+.git/
+.gitignore
+.github/
+
+logs/
+*.log
+npm-debug.log*
+node_modules/
+
+*.tgz
+index.html

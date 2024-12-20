@@ -1,37 +1,75 @@
 /*
-import tictactoe from '@/composables/tictactoe.ts'
+import tictactoe from 'console-tictactoe'
 
-Object.defineProperty(window, "tictactoe", {
-    get: () => {
-        tictactoe();
-    }
-}); 
 */
 
-function tictactoe() {
-
+function tictactoe(): void {
   console.clear();
-  console.log("Shall we play a game?\n");
-
-  const gameBoard = [
-    ['0', '1', '2'],
-    ['3', '4', '5'],
-    ['6', '7', '8']
+  console.log("%cShall we play a game?\n", 'font-weight: bold; font-size: 1.5em; color: rgb(0,265,265); font-family: "Lucida Console", "Courier New", monospace;');
+  let gameBoard = [
+      ['0', '1', '2'],
+      ['3', '4', '5'],
+      ['6', '7', '8']
   ];
-
   let gameOver: boolean = false;
   let userCancel: boolean = false;
+  let restartedGame: boolean = false;
 
   gameBegin();
 
-  function printTable(): void {
-    console.log(
-      gameBoard[0][0] + " | " + gameBoard[0][1] + " | " + gameBoard[0][2] + "\n" +
-                  "_" + " | " + "_" + " | " + "_" + "\n" +
-      gameBoard[1][0] + " | " + gameBoard[1][1] + " | " + gameBoard[1][2] + "\n" +
-                  "_" + " | " + "_" + " | " + "_" + "\n" +
-      gameBoard[2][0] + " | " + gameBoard[2][1] + " | " + gameBoard[2][2] + "\n" + 
-      "\n");
+  function printTable() {
+    const getColor = (value: string) => {
+        if (Number.isFinite(Number(value))) {
+            return 'color: rgb(190,205,205); font-size: x-large; font-weight: bold';
+        }
+        switch(value) {
+            case 'X': return 'color: rgb(0, 153, 204); font-size: x-large; font-weight: bold';
+            case 'O': return 'color: rgb(255, 51, 0); font-size: x-large; font-weight: bold';
+            case '_': return 'color: rgb(0,265,265); font-size: x-large; font-weight: bold';
+            case '|': return 'color: rgb(0,265,265); font-size: x-large; font-weight: bold';
+            default: return 'color: rgb(0,265,265); font-size: x-large; font-weight: bold';
+        }
+    };
+    
+    const formatRow = (row: string[]) => {
+        const formattedCells: string[] = [];
+        const styles: string[] = [];
+
+        row.forEach((cell, index) => {
+            formattedCells.push('%c' + cell);
+            styles.push(getColor(cell));
+            
+            if (index < row.length - 1) {
+                formattedCells.push('%c|');
+                styles.push(getColor('|'));
+            }
+        });
+        
+        return {
+            text: formattedCells.join(' '),
+            styles
+        };
+    };
+    
+    let formatString = '';
+    let styles = [];
+
+    for (let i = 0; i < 3; i++) {
+        const rowFormat = formatRow(gameBoard[i]);
+        
+        const underlineRow = [];
+        const underlineStyles = [];
+        if (i < 2) {
+          underlineRow.push('%c_________');
+          underlineStyles.push(getColor('|'));
+        }
+        
+        formatString += rowFormat.text + '\n' + underlineRow.join(' ') + '\n';
+        styles.push(...rowFormat.styles, ...underlineStyles);
+    }
+    
+    formatString = formatString.slice(0, -2);
+    console.log(formatString, ...styles);
   }
 
   function randoNum(): number {
@@ -118,25 +156,32 @@ function tictactoe() {
     }
   }
 
-  function gameBegin(): void {
-    console.log("Your move first. You are 'X'.\n");
+  function gameBegin() {
+    if (restartedGame === true) {
+        console.clear();
+    }
+    console.log("%cYour move first. You are '%cX%c'. Computer is '%cO%c'\n", 'font-weight: bold; font-size: 1.2em; color: rgb(0,265,265); font-family: "Lucida Console", "Courier New", monospace;', 'font-weight: bold; font-size: 1.4em; color: rgb(0, 153, 204); font-family: "Lucida Console", "Courier New", monospace;', 'font-weight: bold; font-size: 1.2em; color: rgb(0,265,265); font-family: "Lucida Console", "Courier New", monospace;', 'font-weight: bold; font-size: 1.4em; color: rgb(255, 51, 0); font-family: "Lucida Console", "Courier New", monospace;', 'font-weight: bold; font-size: 1.2em; color: rgb(0,265,265); font-family: "Lucida Console", "Courier New", monospace;');
+
     printTable();
-    while(gameOver == false) {
+    while (gameOver === false) {
       userInput();
-      if(userCancel == false){
+      if (userCancel === false) {
         printTable();
         checkStatus();
+        if (gameOver) {
+          return;
+        }
         console.clear();
         computerTurn();
         printTable();
         checkStatus();
       }
-      else if(userCancel == true){
+      else {
         console.clear();
-        console.log("Thanks for playing");
+        console.log("%cThanks for playing", 'color: rgb(255 91 36); font-size: 1.8em; font-weight: bold; font-family: "Lucida Handwriting", "Apple Chancery", fantasy;');
       }
     }
-  }
+}
 
   function validMove(currentPosition: string): boolean {
     if(currentPosition == "X" || currentPosition == "O"){
@@ -265,45 +310,56 @@ function tictactoe() {
   function playerWins(): void {
     console.clear();
     printTable();
-    console.log("-------");
-    console.log("You win");
-    console.log("-------");
+    console.log("%c--------", 'font-weight: bold; font-size: 1.4em; color: rgb(0, 153, 204); font-family: "Lucida Console", "Courier New", monospace;');
+    console.log("%cYou Win!", 'font-weight: bold; font-size: 1.4em; color: rgb(0, 153, 204); font-family: "Lucida Console", "Courier New", monospace;');
+    console.log("%c--------", 'font-weight: bold; font-size: 1.4em; color: rgb(0, 153, 204); font-family: "Lucida Console", "Courier New", monospace;');
     playAgain();
   }
 
-  function computerWins(): void {
+  function computerWins() {
     console.clear();
     printTable();
-    console.log("-------");
-    console.log("You lose. 👎");
-    console.log("-------");
+    console.log("%c--------",'font-weight: bold; font-size: 1.4em; color: rgb(255, 51, 0); font-family: "Lucida Console", "Courier New", monospace;');
+    console.log("%cYou lose. 👎", 'font-weight: bold; font-size: 1.4em; color: rgb(255, 51, 0); font-family: "Lucida Console", "Courier New", monospace;');
+    console.log("%c--------",'font-weight: bold; font-size: 1.4em; color: rgb(255, 51, 0); font-family: "Lucida Console", "Courier New", monospace;');
     playAgain();
   }
 
-  function noWinner(): void {
+  function noWinner() {
     console.clear();
     printTable();
-    console.log("-------");
-    console.log("A strange game. The only winning move is not to play.");
-    console.log("-------");
+    console.log("%c--------", 'font-weight: bold; font-size: 1.4em; color: color: rgb(190,205,205); font-family: "Lucida Console", "Courier New", monospace;');
+    console.log("%cA strange game. The only winning move is not to play.", 'font-weight: bold; font-size: 1.4em; color: color: rgb(190,205,205); font-family: "Lucida Console", "Courier New", monospace;');
+    console.log("%c--------", 'font-weight: bold; font-size: 1.4em; color: color: rgb(190,205,205); font-family: "Lucida Console", "Courier New", monospace;');
     playAgain();
   }
 
-  function playAgain(): void {
+  function playAgain() {
     let userPlayAgain = prompt("Would you like to play again? [y]es or [n]o");
-    if (userPlayAgain === null) {
-      console.log("Thanks for playing.");
-      return;
+    if (userPlayAgain !== null && userPlayAgain !== undefined) {
+      userPlayAgain = userPlayAgain.toLowerCase();
     }
-    userPlayAgain = userPlayAgain?.toLowerCase();
     if (userPlayAgain == "yes" || userPlayAgain == "y") {
-      gameBegin();
+        restartedGame = true;
+        gameOver = false;
+        gameBoard = [
+            ['0', '1', '2'],
+            ['3', '4', '5'],
+            ['6', '7', '8']
+        ];
+        gameBegin();
     }
-    else{
-      console.clear();
-      console.log("Thanks for playing.")
+    else {
+        console.clear();
+        console.log("%cThanks for playing", 'color: rgb(255 91 36); font-size: 1.8em; font-weight: bold; font-family: "Lucida Handwriting", "Apple Chancery", fantasy;');
     }
   }
 }
+
+Object.defineProperty(window, "tictactoe", {
+  get: () => {
+      tictactoe();
+  }
+});
 
 export default tictactoe;
