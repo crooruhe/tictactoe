@@ -1,7 +1,7 @@
 # console-tictactoe
 > `npm i console-tictactoe`
 
-Tic-tac-toe game written in Typescript.
+Tic-tac-toe game written in Typescript. This game can be played in the browser developer console.
 
 After including this into your index.html/index.js or something similar:
 
